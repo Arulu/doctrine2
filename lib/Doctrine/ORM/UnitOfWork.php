@@ -1325,7 +1325,18 @@ class UnitOfWork implements PropertyChangedListener
     public function addToIdentityMap($entity)
     {
         $classMetadata = $this->em->getClassMetadata(get_class($entity));
-        $idHash        = implode(' ', $this->entityIdentifiers[spl_object_hash($entity)]);
+
+		$identifiers = $this->entityIdentifiers[spl_object_hash($entity)];
+
+		foreach($identifiers as $key => $identifier)
+		{
+			if($identifier instanceof \DateTime)
+			{
+				$identifiers[$key] = $identifier->format("d-m-y-h-i-s");
+			}
+		}
+
+        $idHash        = implode(' ', $identifiers);
 
         if ($idHash === '') {
             throw ORMInvalidArgumentException::entityWithoutIdentity($classMetadata->name, $entity);

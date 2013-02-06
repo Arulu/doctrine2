@@ -376,6 +376,10 @@ class EntityManager implements ObjectManager
         $sortedId = array();
 
         foreach ($class->identifier as $identifier) {
+
+			if($identifier == 'date')
+				continue;
+
             if ( ! isset($id[$identifier])) {
                 throw ORMException::missingIdentifierField($class->name, $identifier);
             }
